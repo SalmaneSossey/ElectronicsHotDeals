@@ -116,7 +116,7 @@ def scrape() -> List[Dict[str, str]]:
             print(f"→ {url}")
             r = sess.get(url, timeout=30)
             if r.status_code != 200:
-                print(f"  ⚠️  HTTP {r.status_code} – skipping page")
+                print(f"   HTTP {r.status_code} – skipping page")
                 time.sleep(1.5)
                 continue
             rows = parse_listing(r.text, url, cat_key)
