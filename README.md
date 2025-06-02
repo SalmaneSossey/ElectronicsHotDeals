@@ -107,9 +107,5 @@ This project is open-source and available under the MIT License.
 ## Author
 
 Developed by Salmane Sossey as part of the PFA project at ENSIAS (1st year, Artificial Intelligence and Data Engineering stream).
-```
 
-</details>
-
-4. Click **“Commit changes”** at the bottom.
 
