@@ -83,8 +83,6 @@ ElectronicsHotDeals/
 ├── clean\_jumia\_data.py            # Data cleaning and type detection
 ├── requirements.txt               # Python dependencies
 ├── README.md                      # Project documentation
-│
-└── data/
 ├── jumia\_products\_raw\.jsonl
 ├── electroplanet\_products.jsonl
 ├── jumia\_products\_clean.csv
