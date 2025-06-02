@@ -18,7 +18,7 @@ from sklearn.decomposition import PCA
 try:
     from streamlit_option_menu import option_menu
 except ModuleNotFoundError:
-    st.sidebar.warning("⚠️  'streamlit-option-menu' not installed – using basic menu.")
+    st.sidebar.warning(" 'streamlit-option-menu' not installed – using basic menu.")
     def option_menu(menu_title, options, icons=None, default_index=0, styles=None):
         return st.sidebar.radio(menu_title or "", options, index=default_index)
 
