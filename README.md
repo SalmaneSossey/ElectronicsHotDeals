@@ -1,129 +1,115 @@
-Absolutely! Here's a complete, well-structured `README.md` file tailored to your project. It includes:
 
-* Project description
-* Features
-* Technologies used
-* Installation & usage instructions
-* Folder structure
-* License and credits
+# Jumia Deal Explorer – Intelligent Electronics Recommender
 
----
+This project is a complete data pipeline and dashboard application designed to help users identify the best electronics deals on the Moroccan e-commerce platform Jumia. It also includes an initial price comparison module with Electroplanet, offering insights into pricing differences for equivalent products across vendors.
 
-### ✅ `README.md` (Markdown — ready for GitHub)
+The system collects, cleans, analyzes, and visualizes product data in a structured and interactive way. The final result is a Streamlit web application where users can browse top deals by category, filter products by brand or price, and interact with a natural language chatbot.
 
-````markdown
-# 📊 Jumia Deal Explorer – Intelligent Electronics Recommender System
+## Features
 
-This project is a data pipeline and web application for extracting, analyzing, and comparing electronic product listings from major Moroccan e-commerce platforms — specifically **Jumia** and **Electroplanet**. It offers smart recommendations based on product type, price, and vendor, along with a visual dashboard and chatbot interface.
+- Automated scraping of electronic product listings from Jumia using Playwright and BeautifulSoup.
+- Basic scraping module for Electroplanet for cross-vendor comparisons.
+- Data cleaning and enrichment with product type classification (e.g., TV, smartphone, earpods).
+- Fuzzy brand detection and normalization.
+- Streamlit dashboard showing:
+  - Top 5 deals by product category
+  - Filterable tables with price and brand options
+  - Visual analytics for price distribution
+  - Natural language chatbot for querying products
+- Cross-platform price comparison engine to match similar items and detect price gaps.
 
----
+## Technologies
 
-## 🚀 Features
+- Python 3.10+
+- Playwright (headless browser automation)
+- BeautifulSoup (HTML parsing)
+- Pandas (data manipulation)
+- RapidFuzz (string matching)
+- Streamlit (dashboard and chatbot)
+- Matplotlib (basic visualization)
 
-- 🔍 **Web scraping** of electronics from Jumia and Electroplanet
-- 🧹 **Data cleaning** and standardization of titles, prices, brands
-- 🤖 **AI-powered product type detection** (TVs, smartphones, etc.)
-- 📊 **Streamlit dashboard** with:
-  - Top 5 deals by category
-  - Filter by brand and price
-  - Interactive charts
-  - Deal chatbot (ask in natural language)
-- 🧮 **Cross-platform price comparison**: Match equivalent products across Jumia & Electroplanet
+## Installation
 
----
-
-## 🛠️ Technologies Used
-
-- **Python 3.10**
-- [Playwright](https://playwright.dev/python/) – fast and reliable scraping
-- [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/) – HTML parsing
-- [Pandas](https://pandas.pydata.org/) – data analysis
-- [RapidFuzz](https://github.com/maxbachmann/RapidFuzz) – fuzzy matching for product similarity
-- [Streamlit](https://streamlit.io/) – interactive dashboard & chatbot
-- [Matplotlib](https://matplotlib.org/) – data visualization
-
----
-
-## 🧑‍💻 Installation & Usage
-
-1. **Clone the repo**
-   ```bash
-   git clone https://github.com/your-username/jumia-deal-explorer.git
-   cd jumia-deal-explorer
-````
-
-2. **Install dependencies**
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Run the scraper(s)**
-
-   ```bash
-   python scraper_jumia_electronics.py
-   python scraper_electroplanet.py
-   ```
-
-4. **Clean the data**
-
-   ```bash
-   python clean_jumia_data.py
-   ```
-
-5. **Launch the dashboard**
-
-   ```bash
-   streamlit run app1.py
-   ```
-
----
-
-## 📁 Project Structure
+1. Clone the repository:
 
 ```
+
+git clone [https://github.com/your-username/jumia-deal-explorer.git](https://github.com/your-username/jumia-deal-explorer.git)
+cd jumia-deal-explorer
+
+```
+
+2. Install required Python packages:
+
+```
+
+pip install -r requirements.txt
+
+```
+
+3. Run the scrapers:
+
+```
+
+python scraper\_jumia\_electronics.py
+python scraper\_electroplanet.py
+
+```
+
+4. Clean the Jumia data:
+
+```
+
+python clean\_jumia\_data.py
+
+```
+
+5. Launch the dashboard:
+
+```
+
+streamlit run app1.py
+
+```
+
+## Project Structure
+
+```
+
 jumia-deal-explorer/
 │
-├── scraper_jumia_electronics.py      # Scrapes electronics from Jumia
-├── scraper_electroplanet.py          # Scrapes TVs & phones from Electroplanet
-├── clean_jumia_data.py               # Cleans and enriches scraped data
-├── app1.py                           # Streamlit dashboard and chatbot
-├── requirements.txt                  # Required Python packages
-├── README.md                         # This file
+├── app1.py                         # Streamlit dashboard
+├── scraper\_jumia\_electronics.py   # Jumia scraper
+├── scraper\_electroplanet.py       # Electroplanet scraper
+├── clean\_jumia\_data.py            # Data cleaning and type detection
+├── requirements.txt               # Python dependencies
+├── README.md                      # Project documentation
 │
-├── data/
-│   ├── jumia_products_raw.jsonl      # Raw Jumia product data
-│   ├── electroplanet_products.jsonl  # Raw Electroplanet product data
-│   ├── jumia_products_clean.csv      # Cleaned Jumia dataset
-│
-└── screenshots/                      # Optional: for dashboard UI captures
+└── data/
+├── jumia\_products\_raw\.jsonl
+├── electroplanet\_products.jsonl
+├── jumia\_products\_clean.csv
+
+```
+
+## Use Cases
+
+This tool can be used to:
+
+- Identify the best-priced TVs, phones, or audio accessories on Jumia
+- Compare product prices between Jumia and Electroplanet
+- Support informed purchasing decisions through visual data exploration
+- Query available deals using natural language (e.g., "Samsung TV under 4000 Dhs")
+
+## License
+
+This project is open-source and available under the MIT License.
+
+## Author
+
+Developed by Salmane Sossey as part of the PFA project at ENSIAS (1st year, Artificial Intelligence and Data Engineering stream).
 ```
 
 ---
 
-## 📊 Sample Use Cases
-
-* Compare prices for a specific smartphone or TV across vendors
-* Identify best-value electronics under a specific budget
-* Browse summarized deals visually by brand or type
-* Ask the chatbot: *“Show me Samsung TVs under 4000 Dhs”*
-
----
-
-## 📜 License
-
-MIT License — free to use, modify, and distribute.
-
----
-
-## 🙌 Acknowledgements
-
-* Project developed as part of the **ENSIAS 1st-Year Engineering PFA** (Data Engineering stream)
-* Special thanks to [Jumia.ma](https://www.jumia.ma/) and [Electroplanet.ma](https://www.electroplanet.ma/) for making their public product listings available.
-
-```
-
----
-
-Would you like me to also generate a `requirements.txt` file or a project logo/banner for GitHub?
-```
+Let me know if you’d like the `requirements.txt` auto-generated or if you're ready to deploy it on GitHub Pages or Hugging Face Spaces.
