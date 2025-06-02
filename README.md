@@ -1,4 +1,3 @@
-
 # Jumia Deal Explorer – Intelligent Electronics Recommender
 
 This project is a complete data pipeline and dashboard application designed to help users identify the best electronics deals on the Moroccan e-commerce platform Jumia. It also includes an initial price comparison module with Electroplanet, offering insights into pricing differences for equivalent products across vendors.
@@ -34,8 +33,8 @@ The system collects, cleans, analyzes, and visualizes product data in a structur
 
 ```
 
-git clone [https://github.com/your-username/jumia-deal-explorer.git](https://github.com/your-username/jumia-deal-explorer.git)
-cd jumia-deal-explorer
+git clone [https://github.com/SalmaneSossey/ElectronicsHotDeals.git](https://github.com/SalmaneSossey/ElectronicsHotDeals.git)
+cd ElectronicsHotDeals
 
 ```
 
@@ -76,7 +75,7 @@ streamlit run app1.py
 
 ```
 
-jumia-deal-explorer/
+ElectronicsHotDeals/
 │
 ├── app1.py                         # Streamlit dashboard
 ├── scraper\_jumia\_electronics.py   # Jumia scraper
@@ -110,6 +109,7 @@ This project is open-source and available under the MIT License.
 Developed by Salmane Sossey as part of the PFA project at ENSIAS (1st year, Artificial Intelligence and Data Engineering stream).
 ```
 
----
+</details>
 
-Let me know if you’d like the `requirements.txt` auto-generated or if you're ready to deploy it on GitHub Pages or Hugging Face Spaces.
+4. Click **“Commit changes”** at the bottom.
+
