@@ -1,109 +1,271 @@
-# Jumia Deal Explorer – Intelligent Electronics Recommender
+# 🛒 Electronics Hot Deals Morocco
 
-This project is a complete data pipeline and dashboard application designed to help users identify the best electronics deals on the Moroccan e-commerce platform Jumia. It also includes an initial price comparison module with Electroplanet, offering insights into pricing differences for equivalent products across vendors.
+<div align="center">
 
-The system collects, cleans, analyzes, and visualizes product data in a structured and interactive way. The final result is a Streamlit web application where users can browse top deals by category, filter products by brand or price, and interact with a natural language chatbot.
+![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![React](https://img.shields.io/badge/React-18.2-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=for-the-badge&logo=fastapi&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-5.0-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 
-## Features
+**A modern full-stack web application that aggregates and analyzes electronics deals from Moroccan e-commerce platforms.**
 
-- Automated scraping of electronic product listings from Jumia using Playwright and BeautifulSoup.
-- Basic scraping module for Electroplanet for cross-vendor comparisons.
-- Data cleaning and enrichment with product type classification (e.g., TV, smartphone, earpods).
-- Fuzzy brand detection and normalization.
-- Streamlit dashboard showing:
-  - Top 5 deals by product category
-  - Filterable tables with price and brand options
-  - Visual analytics for price distribution
-  - Natural language chatbot for querying products
-- Cross-platform price comparison engine to match similar items and detect price gaps.
+[Features](#-features) • [Tech Stack](#-tech-stack) • [Architecture](#-architecture) • [Installation](#-installation) • [Screenshots](#-screenshots)
 
-## Technologies
+</div>
 
-- Python 3.10+
-- Playwright (headless browser automation)
-- BeautifulSoup (HTML parsing)
-- Pandas (data manipulation)
-- RapidFuzz (string matching)
-- Streamlit (dashboard and chatbot)
-- Matplotlib (basic visualization)
+---
 
-## Installation
+## 🎯 Overview
 
-1. Clone the repository:
+Electronics Hot Deals is a comprehensive data pipeline and dashboard application designed to help users discover the best electronics deals in Morocco. It automatically scrapes, cleans, and visualizes product data from **Jumia** and **Electroplanet**, providing real-time insights through an elegant modern UI.
+
+### Key Highlights
+
+- 🔄 **Automated Data Pipeline** — Scheduled web scraping every 6 hours
+- 📊 **Interactive Analytics** — Dynamic charts and visualizations with Recharts
+- 🤖 **AI-Powered Search** — Natural language product queries via Google Gemini
+- 🎨 **Modern UI/UX** — Dark theme with glassmorphism and smooth animations
+- ⚡ **High Performance** — FastAPI backend with React + Vite frontend
+
+---
+
+## ✨ Features
+
+| Feature | Description |
+|---------|-------------|
+| **Smart Deal Scoring** | Algorithm ranks products by discount %, price, and brand trust |
+| **Advanced Filtering** | Filter by category, brand, product type, and price range |
+| **Real-time Search** | Instant search across 3,000+ products |
+| **Price Analytics** | Distribution charts, category comparisons, brand rankings |
+| **AI Chatbot** | Ask questions like "Best TV under 5000 Dhs" |
+| **Auto-refresh** | Background scheduler keeps data current |
+| **Responsive Design** | Works seamlessly on desktop, tablet, and mobile |
+
+---
+
+## 🛠 Tech Stack
+
+### Backend
+| Technology | Purpose |
+|------------|---------|
+| **Python 3.10+** | Core language |
+| **FastAPI** | High-performance REST API |
+| **APScheduler** | Automated job scheduling |
+| **Pandas** | Data manipulation & analysis |
+| **BeautifulSoup** | HTML parsing for Jumia |
+| **Playwright** | Browser automation for Electroplanet |
+| **Pydantic** | Data validation |
+
+### Frontend
+| Technology | Purpose |
+|------------|---------|
+| **React 18** | UI component library |
+| **Vite** | Next-gen build tool |
+| **React Router** | Client-side routing |
+| **Recharts** | Data visualization |
+| **Lucide React** | Icon system |
+| **CSS3** | Custom design system with CSS variables |
+
+### APIs & Services
+| Service | Purpose |
+|---------|---------|
+| **Google Gemini** | AI-powered product Q&A |
+
+---
+
+## 🏗 Architecture
 
 ```
-
-git clone [https://github.com/SalmaneSossey/ElectronicsHotDeals.git](https://github.com/SalmaneSossey/ElectronicsHotDeals.git)
-cd ElectronicsHotDeals
-
+┌─────────────────────────────────────────────────────────────┐
+│                        FRONTEND                              │
+│  ┌─────────┐  ┌──────────┐  ┌───────────┐  ┌─────────┐     │
+│  │Dashboard│  │ Products │  │ Analytics │  │ AI Chat │     │
+│  └────┬────┘  └────┬─────┘  └─────┬─────┘  └────┬────┘     │
+│       └────────────┴──────────────┴─────────────┘          │
+│                         React + Vite                        │
+└─────────────────────────────┬───────────────────────────────┘
+                              │ HTTP/REST
+┌─────────────────────────────┴───────────────────────────────┐
+│                        BACKEND                               │
+│  ┌──────────────┐    ┌─────────────┐    ┌────────────────┐ │
+│  │  FastAPI     │    │ APScheduler │    │  Data Layer    │ │
+│  │  REST API    │◄───│  (6h cycle) │───►│  (Pandas/CSV)  │ │
+│  └──────────────┘    └─────────────┘    └────────────────┘ │
+└─────────────────────────────┬───────────────────────────────┘
+                              │
+┌─────────────────────────────┴───────────────────────────────┐
+│                       SCRAPERS                               │
+│  ┌─────────────────────┐    ┌──────────────────────────┐   │
+│  │  Jumia Scraper      │    │  Electroplanet Scraper   │   │
+│  │  (BeautifulSoup)    │    │  (Playwright)            │   │
+│  └─────────────────────┘    └──────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-2. Install required Python packages:
+---
+
+## 📁 Project Structure
 
 ```
-
-pip install -r requirements.txt
-
-```
-
-3. Run the scrapers:
-
-```
-
-python scraper\_jumia\_electronics.py
-python scraper\_electroplanet.py
-
-```
-
-4. Clean the Jumia data:
-
-```
-
-python clean\_jumia\_data.py
-
-```
-
-5. Launch the dashboard:
-
-```
-
-streamlit run app1.py
-
-```
-
-## Project Structure
-
-```
-
 ElectronicsHotDeals/
-│
-├── app1.py                         # Streamlit dashboard
-├── scraper\_jumia\_electronics.py   # Jumia scraper
-├── scraper\_electroplanet.py       # Electroplanet scraper
-├── clean\_jumia\_data.py            # Data cleaning and type detection
-├── requirements.txt               # Python dependencies
-├── README.md                      # Project documentation
-├── jumia\_products\_raw\.csv
-├── electroplanet\_products.jsonl
-├── jumia\_products\_clean.csv
-
+├── backend/
+│   ├── main.py                 # FastAPI application entry
+│   ├── scheduler.py            # APScheduler configuration
+│   ├── models.py               # Pydantic schemas
+│   └── routes/
+│       └── products.py         # Product API endpoints
+├── frontend/
+│   ├── src/
+│   │   ├── App.jsx             # Main app with routing
+│   │   ├── components/
+│   │   │   ├── Navbar.jsx      # Sidebar navigation
+│   │   │   ├── ProductCard.jsx # Product display card
+│   │   │   └── StatsCard.jsx   # Statistics card
+│   │   ├── pages/
+│   │   │   ├── Dashboard.jsx   # Home page with stats
+│   │   │   ├── Products.jsx    # Filterable catalog
+│   │   │   ├── Analytics.jsx   # Charts & graphs
+│   │   │   └── Chat.jsx        # AI assistant
+│   │   └── styles/
+│   │       └── index.css       # Design system
+│   ├── package.json
+│   └── vite.config.js
+├── scraper_jumia_electronics.py    # Jumia web scraper
+├── scraper_electroplanet.py        # Electroplanet scraper
+├── clean_jumia_data.py             # Data cleaning pipeline
+└── requirements.txt
 ```
 
-## Use Cases
+---
 
-This tool can be used to:
+## 🚀 Installation
 
-- Identify the best-priced TVs, phones, or audio accessories on Jumia
-- Compare product prices between Jumia and Electroplanet
-- Support informed purchasing decisions through visual data exploration
-- Query available deals using natural language (e.g., "Samsung TV under 4000 Dhs")
+### Prerequisites
 
-## License
+- Python 3.10 or higher
+- Node.js 18 or higher
+- npm or yarn
+
+### Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/SalmaneSossey/ElectronicsHotDeals.git
+   cd ElectronicsHotDeals
+   ```
+
+2. **Install Python dependencies**
+   ```bash
+   pip install -r requirements.txt
+   pip install fastapi uvicorn apscheduler
+   playwright install  # For Electroplanet scraper
+   ```
+
+3. **Install frontend dependencies**
+   ```bash
+   cd frontend
+   npm install
+   cd ..
+   ```
+
+4. **Run the scrapers (optional - sample data included)**
+   ```bash
+   python scraper_jumia_electronics.py
+   python clean_jumia_data.py
+   ```
+
+5. **Start the backend**
+   ```bash
+   cd backend
+   python main.py
+   # API running at http://localhost:8000
+   # Swagger docs at http://localhost:8000/docs
+   ```
+
+6. **Start the frontend** (in a new terminal)
+   ```bash
+   cd frontend
+   npm run dev
+   # Open http://localhost:5173
+   ```
+
+---
+
+## 📸 Screenshots
+
+### Dashboard
+> Modern dark theme with stats overview and top deals
+
+### Products Catalog
+> Filterable grid with search, category, and brand filters
+
+### Analytics Dashboard
+> Interactive charts: price distribution, category analysis, brand rankings
+
+### AI Chat
+> Natural language queries powered by Google Gemini
+
+---
+
+## 🔌 API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/products` | List products with pagination & filters |
+| `GET` | `/api/products/stats` | Dashboard statistics |
+| `GET` | `/api/products/top-deals` | Top deals by score |
+| `POST` | `/api/scrape/trigger` | Manually trigger scraping |
+| `GET` | `/api/scrape/status` | Current scrape status |
+
+### Example Request
+```bash
+curl "http://localhost:8000/api/products?category=electronique&per_page=10"
+```
+
+---
+
+## 🎨 Design Philosophy
+
+The UI follows modern design principles:
+
+- **Dark Theme** — Reduces eye strain, looks professional
+- **Glassmorphism** — Subtle transparency and blur effects
+- **Gradient Accents** — Orange-to-yellow gradients for CTAs
+- **Micro-animations** — Smooth hover effects and transitions
+- **Responsive** — Mobile-first approach with breakpoints
+
+---
+
+## 🤝 Skills Demonstrated
+
+This project showcases proficiency in:
+
+- **Full-Stack Development** — React frontend + FastAPI backend
+- **Web Scraping** — BeautifulSoup, Playwright, anti-detection
+- **Data Engineering** — ETL pipeline, data cleaning, analysis
+- **API Design** — RESTful endpoints, Pydantic validation
+- **Modern UI/UX** — CSS design systems, responsive layouts
+- **DevOps** — Background scheduling, process management
+- **AI Integration** — LLM API integration (Gemini)
+
+---
+
+## 📄 License
 
 This project is open-source and available under the MIT License.
 
-## Author
+---
 
-Developed by Salmane Sossey as part of the PFA project at ENSIAS (1st year, Artificial Intelligence and Data Engineering stream).
+## 👤 Author
 
+**Salmane Sossey**  
+AI & Data Engineering Student @ ENSIAS
 
+[![GitHub](https://img.shields.io/badge/GitHub-SalmaneSossey-181717?style=flat&logo=github)](https://github.com/SalmaneSossey)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=flat&logo=linkedin)](https://linkedin.com/in/salmane-sossey)
+
+---
+
+<div align="center">
+⭐ Star this repo if you found it helpful!
+</div>
