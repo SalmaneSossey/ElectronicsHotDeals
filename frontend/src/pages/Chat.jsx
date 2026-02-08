@@ -1,15 +1,22 @@
 import { useState, useRef, useEffect } from 'react'
-import { Send, Bot, User, AlertCircle } from 'lucide-react'
+import { Send, Bot, User, Search } from 'lucide-react'
 
 function Chat() {
     const [messages, setMessages] = useState([
-        { role: 'assistant', content: 'Hello! I can help you find the best electronics deals. Ask me about specific products, brands, or price ranges. For example: "What are the best TVs under 5000 Dhs?" or "Show me Samsung smartphones"' }
+        { role: 'assistant', content: 'Hello! I can help you find the best electronics deals. Try asking:\n\n• "Show me Samsung phones"\n• "Best laptops under 5000 Dhs"\n• "TVs with discounts"\n• "Cheapest tablets"\n• "Top gaming products"' }
     ])
     const [input, setInput] = useState('')
     const [loading, setLoading] = useState(false)
-    const [apiKey, setApiKey] = useState('')
-    const [showApiInput, setShowApiInput] = useState(true)
+    const [products, setProducts] = useState([])
     const messagesEndRef = useRef(null)
+
+    useEffect(() => {
+        // Load products once
+        fetch('/api/products?per_page=1000')
+            .then(res => res.json())
+            .then(data => setProducts(data.products || []))
+            .catch(() => { })
+    }, [])
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -19,68 +26,84 @@ function Chat() {
         scrollToBottom()
     }, [messages])
 
+    const searchProducts = (query) => {
+        const q = query.toLowerCase()
+        let results = [...products]
+
+        // Extract price constraints
+        const underMatch = q.match(/under\s+(\d+)/)
+        const aboveMatch = q.match(/(?:above|over)\s+(\d+)/)
+        const maxPrice = underMatch ? parseInt(underMatch[1]) : null
+        const minPrice = aboveMatch ? parseInt(aboveMatch[1]) : null
+
+        // Apply price filters
+        if (maxPrice) results = results.filter(p => (p.price_numeric || 0) <= maxPrice)
+        if (minPrice) results = results.filter(p => (p.price_numeric || 0) >= minPrice)
+
+        // Check for discount requests
+        if (q.includes('discount') || q.includes('sale') || q.includes('deal')) {
+            results = results.filter(p => (p.discount_percentage || 0) > 20)
+            results.sort((a, b) => (b.discount_percentage || 0) - (a.discount_percentage || 0))
+        }
+
+        // Check for cheap/budget requests
+        if (q.includes('cheap') || q.includes('budget') || q.includes('affordable')) {
+            results.sort((a, b) => (a.price_numeric || 0) - (b.price_numeric || 0))
+        }
+
+        // Check for best/top requests
+        if (q.includes('best') || q.includes('top')) {
+            results = results.filter(p => (p.discount_percentage || 0) > 15)
+        }
+
+        // Keyword search in title/brand/category
+        const keywords = q.replace(/under\s+\d+/g, '').replace(/above\s+\d+/g, '')
+            .split(/\s+/).filter(w => w.length > 2 && !['the', 'and', 'for', 'with', 'show', 'find', 'get', 'best', 'good'].includes(w))
+
+        if (keywords.length > 0) {
+            results = results.filter(p => {
+                const text = `${p.title} ${p.brand} ${p.category} ${p.type_product}`.toLowerCase()
+                return keywords.some(kw => text.includes(kw))
+            })
+        }
+
+        return results.slice(0, 8)
+    }
+
+    const formatResponse = (query, results) => {
+        if (results.length === 0) {
+            return "I couldn't find products matching your criteria. Try different keywords or a higher price range!"
+        }
+
+        let response = `Found ${results.length} products for you:\n\n`
+
+        results.forEach((p, i) => {
+            const discount = p.discount_percentage ? ` (${Math.round(p.discount_percentage)}% off!)` : ''
+            response += `${i + 1}. **${p.title}**\n`
+            response += `   💰 ${p.price_numeric?.toFixed(0) || 'N/A'} Dhs${discount}\n`
+            response += `   🏷️ ${p.brand || 'Unknown'} | ${p.category || ''}\n\n`
+        })
+
+        response += `\n💡 *Tip: Visit the Products page for more filters!*`
+        return response
+    }
+
     const handleSend = async () => {
         if (!input.trim() || loading) return
-        if (!apiKey) {
-            setMessages(prev => [...prev, {
-                role: 'assistant',
-                content: '⚠️ Please enter your Google Gemini API key above to enable AI chat.'
-            }])
-            return
-        }
 
         const userMessage = input.trim()
         setInput('')
         setMessages(prev => [...prev, { role: 'user', content: userMessage }])
         setLoading(true)
 
-        try {
-            // Fetch products for context
-            const productsRes = await fetch('/api/products?per_page=200')
-            const productsData = productsRes.ok ? await productsRes.json() : { products: [] }
+        // Simulate slight delay for better UX
+        await new Promise(r => setTimeout(r, 500))
 
-            // Create context from products
-            const context = productsData.products.slice(0, 100).map(p =>
-                `${p.title} | ${p.brand} | ${p.price_numeric} Dhs | ${p.category} | ${p.discount_percentage || 0}% off`
-            ).join('\n')
+        const results = searchProducts(userMessage)
+        const response = formatResponse(userMessage, results)
 
-            // Call Gemini API directly
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [{
-                            text: `You are an expert electronics shopping assistant for Morocco. Use ONLY the following product data to answer questions. If the data doesn't contain the answer, say so politely. Format prices in Dhs. Be concise but helpful.
-
-PRODUCT DATA:
-${context}
-
-USER QUESTION: ${userMessage}
-
-Provide a helpful, concise answer based only on the product data above.`
-                        }]
-                    }]
-                })
-            })
-
-            if (!response.ok) {
-                throw new Error('Failed to get response from Gemini')
-            }
-
-            const data = await response.json()
-            const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I could not generate a response.'
-
-            setMessages(prev => [...prev, { role: 'assistant', content: aiResponse }])
-        } catch (err) {
-            console.error('Chat error:', err)
-            setMessages(prev => [...prev, {
-                role: 'assistant',
-                content: '❌ Error: Could not get a response. Please check your API key and try again.'
-            }])
-        } finally {
-            setLoading(false)
-        }
+        setMessages(prev => [...prev, { role: 'assistant', content: response }])
+        setLoading(false)
     }
 
     const handleKeyPress = (e) => {
@@ -94,33 +117,11 @@ Provide a helpful, concise answer based only on the product data above.`
         <div>
             <header className="page-header">
                 <h1 className="page-title">
-                    <Bot style={{ display: 'inline', marginRight: '0.5rem', color: 'var(--accent-primary)' }} />
-                    AI Shopping Assistant
+                    <Search style={{ display: 'inline', marginRight: '0.5rem', color: 'var(--accent-primary)' }} />
+                    Smart Product Search
                 </h1>
-                <p className="page-subtitle">Ask questions about products using natural language</p>
+                <p className="page-subtitle">Ask questions about products in natural language</p>
             </header>
-
-            {/* API Key Input */}
-            {showApiInput && (
-                <div className="glass-card" style={{ marginBottom: '1rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                    <AlertCircle size={20} style={{ color: 'var(--warning)', flexShrink: 0 }} />
-                    <input
-                        type="password"
-                        className="filter-input"
-                        placeholder="Enter your Google Gemini API key..."
-                        value={apiKey}
-                        onChange={(e) => setApiKey(e.target.value)}
-                        style={{ flex: 1 }}
-                    />
-                    <button
-                        className="btn btn-secondary"
-                        onClick={() => apiKey && setShowApiInput(false)}
-                        disabled={!apiKey}
-                    >
-                        Save
-                    </button>
-                </div>
-            )}
 
             {/* Chat Container */}
             <div className="chat-container">
@@ -139,7 +140,7 @@ Provide a helpful, concise answer based only on the product data above.`
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                                 <Bot size={20} />
                                 <div className="loading-spinner" style={{ width: 20, height: 20 }}></div>
-                                <span>Thinking...</span>
+                                <span>Searching...</span>
                             </div>
                         </div>
                     )}
@@ -150,7 +151,7 @@ Provide a helpful, concise answer based only on the product data above.`
                     <div className="chat-input-wrapper">
                         <textarea
                             className="chat-input"
-                            placeholder="Ask about products... (e.g., 'Best laptops under 8000 Dhs')"
+                            placeholder="Try: 'Samsung phones under 3000 Dhs' or 'Laptops with discounts'"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyPress={handleKeyPress}

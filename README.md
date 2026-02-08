@@ -196,14 +196,22 @@ ElectronicsHotDeals/
 ### Dashboard
 > Modern dark theme with stats overview and top deals
 
+![Dashboard](./screenshots/dashboard.png)
+
 ### Products Catalog
 > Filterable grid with search, category, and brand filters
+
+![Products](./screenshots/products.png)
 
 ### Analytics Dashboard
 > Interactive charts: price distribution, category analysis, brand rankings
 
-### AI Chat
-> Natural language queries powered by Google Gemini
+![Analytics](./screenshots/analytics.png)
+
+### Smart Product Search
+> Natural language product search with keyword matching
+
+![Chat](./screenshots/chat.png)
 
 ---
 
